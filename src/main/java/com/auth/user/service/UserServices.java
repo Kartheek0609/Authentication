@@ -2,8 +2,8 @@ package com.auth.user.service;
 
 import com.auth.user.models.Token;
 import com.auth.user.models.User;
-import com.auth.user.repository.TokenRepository;
-import com.auth.user.repository.UserRepository;
+import com.auth.user.repositories.TokenRepository;
+import com.auth.user.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
