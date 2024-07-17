@@ -38,8 +38,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-import java.security.KeyPair;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -92,6 +90,7 @@ public class SecurityConfig {
 //
 //        return new InMemoryUserDetailsManager(userDetails);
 //    }
+
 //    @Bean
 //    public RegisteredClientRepository registeredClientRepository() {
 //        RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())

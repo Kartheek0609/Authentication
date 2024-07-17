@@ -2,6 +2,7 @@ package com.auth.user.security.config;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -19,6 +20,7 @@ class SecurityConfigTest {
 
     @Autowired
     RegisteredClientRepository registeredClientRepository;
+
     @Test
     public void createAClient(){
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
@@ -34,6 +36,7 @@ class SecurityConfigTest {
                 .scope("ADMIN")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
+
         registeredClientRepository.save(oidcClient);
     }
 

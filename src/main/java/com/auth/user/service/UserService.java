@@ -1,4 +1,4 @@
-package com.auth.user.service;
+package com.auth.user.services;
 
 import com.auth.user.models.Token;
 import com.auth.user.models.User;
@@ -14,50 +14,56 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class UserServices {
+public class UserService {
+
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private TokenRepository tokenRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+
     public User signUp(String name, String email, String password){
-        //Skipping email verification part.
-        Optional<User> user= userRepository.findByEmail(email);
 
-        if(user.isPresent()){
-            //throwing the error user is already present
+        // skipping email verification part here.
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isPresent()){
+            // throw user is already present
         }
+        User user = new User();
+        user.setEmail(email);
+        user.setName(name);
+        user.setHashedPassword(bCryptPasswordEncoder.encode(password));
 
-        User user1= new User();
-        user1.setName(name);
-        user1.setEmail(email);
-        user1.setHashedPassword(bCryptPasswordEncoder.encode(password));
-
-        return userRepository.save(user1);
+        return userRepository.save(user);
     }
 
-    public Token login(String email, String password){
-        Optional<User> user = userRepository.findByEmail(email);
-        if(user.isEmpty()){
-            return null;
-        }
-        User user1 = user.get();
-        if (!bCryptPasswordEncoder.matches(password, user1.getHashedPassword())) {
-            // throw password is wrong
-            System.out.println("Password is wrong");
-            return null;
-        }
-        Token token = new Token();
-        token.setUser(user1);
+    public Token login(String email, String password) {
 
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if(optionalUser.isEmpty()){
+            // throw user is not valid
+            return null;
+        }
+
+        User user = optionalUser.get();
+        if (!bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
+            // throw password is wrong
+            return null;
+        }
+
+        Token token = new Token();
+        token.setUser(user);
         token.setExpirydate(get30DaysLaterDate());
         token.setValue(UUID.randomUUID().toString());
 
         return tokenRepository.save(token);
-
     }
+
     private Date get30DaysLaterDate() {
 
         Date date = new Date();
@@ -86,6 +92,7 @@ public class UserServices {
         Token updatedToken = tokenOptional.get();
         updatedToken.setDeleted(true);
         tokenRepository.save(updatedToken);
+
     }
 
     public boolean validateToken(String token) {
@@ -102,5 +109,4 @@ public class UserServices {
 
         return tokenOptional.isPresent();
     }
-
 }
